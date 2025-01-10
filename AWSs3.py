@@ -1,16 +1,18 @@
-from Creds import S3_BUCKET_NAME, AWS_REGION
+import config
 import json
 import time
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
 import uuid
 
-
 file_key = ''
+S3_BUCKET_NAME = config.BaseConfig.S3_BUCKET_NAME
+AWS_REGION = config.BaseConfig.AWS_REGION
+s3 =  boto3.resource('s3')
 
 async def save_to_ddb(data, url, ts):
     dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('api_logs5')
+    table = dynamodb.Table('api_logs')
     table.put_item(
         Item={
             'id': str(uuid.uuid4()),
@@ -33,7 +35,7 @@ async def save_to_s3(data, ts):
 
 async def five_minute_check(ts, city):
     dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('api_logs5')
+    table = dynamodb.Table('api_logs')
     five_minutes_ago = str(ts - 300)
 
     response = table.scan(
@@ -59,8 +61,6 @@ async def five_minute_check(ts, city):
         return True
 
 async def get_weather_from_s3():
-    s3 = boto3.resource('s3')
-
     try:
         obj = s3.Object(S3_BUCKET_NAME, file_key)
         json_str =  obj.get()['Body'].read().decode('utf-8')

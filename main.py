@@ -1,15 +1,15 @@
 import time
 from fastapi import FastAPI, HTTPException, Query
 import aiohttp
-from Creds import API_KEY
 import AWSs3
+import config
 
 app = FastAPI()
 
 async def fetch_weather_data(city: str) -> dict:
     async with aiohttp.ClientSession() as session:
         try:
-            url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}"
+            url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={config.BaseConfig.API_KEY}"
             async with session.get(url) as response:
                 if response.status == 200:
                     return await response.json()
@@ -25,7 +25,8 @@ async def fetch_weather_data(city: str) -> dict:
 
 @app.get("/weather")
 async def get_weather(city: str = Query(..., description="The name of the city to fetch weather for")):
-
+    a = "Aaa"
+    a.title()
     city = city[0].upper() + city[1:].lower()
     try:
 
