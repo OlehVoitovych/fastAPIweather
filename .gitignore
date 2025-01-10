@@ -1,5 +1,5 @@
 # Example .dockerignore
 .git
-
+__pycache__
 *.pyc
 Config/.env
