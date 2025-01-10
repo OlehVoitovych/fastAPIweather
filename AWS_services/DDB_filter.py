@@ -1,10 +1,11 @@
 import boto3
 from boto3.dynamodb.conditions import Attr
 import AWS_services.S3_get_item
+import Config.config
 
 async def five_minute_check(ts, city):
     dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('api_logs')
+    table = dynamodb.Table(Config.config.BaseConfig.DYNAMODB_TABLE)
     five_minutes_ago = str(ts - 300)
 
     response = table.scan(

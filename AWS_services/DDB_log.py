@@ -1,9 +1,10 @@
 import boto3
 import uuid
+import Config.config
 
 async def save_to_ddb(data, url, ts):
     dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('api_logs')
+    table = dynamodb.Table(Config.config.BaseConfig.DYNAMODB_TABLE)
     table.put_item(
         Item={
             'id': str(uuid.uuid4()),
